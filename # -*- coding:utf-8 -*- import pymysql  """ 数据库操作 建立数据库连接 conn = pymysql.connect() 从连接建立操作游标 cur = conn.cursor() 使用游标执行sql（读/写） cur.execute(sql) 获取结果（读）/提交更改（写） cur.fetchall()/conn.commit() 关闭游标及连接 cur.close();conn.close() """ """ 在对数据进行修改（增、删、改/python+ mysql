@@ -1,0 +1,139 @@
+# -*- coding:utf-8 -*-
+import pymysql
+
+"""
+数据库操作
+建立数据库连接 conn = pymysql.connect()
+从连接建立操作游标 cur = conn.cursor()
+使用游标执行sql（读/写） cur.execute(sql)
+获取结果（读）/ 提交更改（写） cur.fetchall() / conn.commit()
+关闭游标及连接 cur.close();conn.close()
+"""
+"""
+在对数据进行修改（增、删、改/更新）后，都需要进行commit提交操作，否则操作失败
+"""
+
+# 连接数据库
+print('连接mysql服务器......')
+conn = pymysql.connect(host="localhost", user="root", passwd="123456", database="test", charset="utf8")
+print('服务器连接成功!')
+print('=============================')
+
+
+# 创建cursor游标
+cursor = conn.cursor()
+
+# 创建user288db数据库
+cursor.execute('CREATE DATABASE IF NOT EXISTS user288db DEFAULT CHARSET utf8 COLLATE utf8_general_ci;')
+print('创建user288db数据库成功')
+
+# 创建user表
+cursor.execute('drop table if exists user')
+sql="""CREATE TABLE IF NOT EXISTS `user` 
+        (`id` int(11) NOT NULL AUTO_INCREMENT,
+	     `name` varchar(255) NOT NULL,
+	     `age` int(11) NOT NULL,
+	     PRIMARY KEY (`id`)) 
+	     ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=0"""
+
+"""插入"""
+try:
+    # 一次插入多条记录
+    sql = "INSERT INTO newYear VALUES" \
+          "('谢广坤', 40, '男', '510811198801011122')," \
+          "('谢大脚', 41, '女', '510811198801021133')," \
+          "('赵四', 42, '男', '510811198801031144')," \
+          "('刘能', 43, '男', '510811198801041155')," \
+          "('王老七', 44, '男', '510811198801051166')"
+    cursor.execute(sql)
+    conn.commit()  # 提交更新的数据到数据库
+    print('插入成功')
+except Exception as error:  # 插入失败后，抛出异常
+    print('插入数据失败')
+    print(error)
+
+# print('---------------------------------------')
+#
+# """查询"""
+# sql = "SELECT * FROM tb_user"
+# cursor.execute(sql)
+# result = cursor.fetchall()
+# for row in result:
+#     id = row[0]
+#     name = row[1]
+#     print("user_id:%s, user_name:%s" % (id, name))
+# print('---------------------------------------')
+#
+# """删除"""
+# try:
+#     sql = "DELETE FROM tb_user WHERE user_id=1005"
+#     cursor.execute(sql)
+#     conn.commit()  # 提交删除后的数据到数据库
+#     print('删除成功')
+# except Exception as error:
+#     print("删除失败")
+#     print(error)
+# sql = "SELECT * FROM tb_user"
+# cursor.execute(sql)
+# result = cursor.fetchall()
+# for row in result:
+#     id = row[0]
+#     name = row[1]
+#     print("user_id:%s, user_name:%s" % (id, name))
+# print('---------------------------------------')
+#
+# """更新update"""
+# try:
+#     sql = "UPDATE tb_user SET user_name='刘金凤' WHERE user_id=1004"
+#     cursor.execute(sql)
+#     conn.commit()  # 提交更新后的数据到数据库
+#     print('更新成功')
+# except Exception as error:
+#     print(error)
+#     print('更新失败')
+# sql = "SELECT * FROM tb_user"
+# cursor.execute(sql)
+# result = cursor.fetchall()
+# for row in result:
+#     id = row[0]
+#     name = row[1]
+#     print("user_id:%s, user_name:%s" % (id, name))
+# print('---------------------------------------')
+
+# """新建表"""
+# sql = "CREATE TABLE keydom(" \
+#       "kid INT(10) NOT NULL, " \
+#       "sname VARCHAR(20) NOT NULL, " \
+#       "kage INT(3))" \
+#       "DEFAULT CHARSET=utf8"
+# try:
+#     cursor.execute(sql)
+#     conn.commit()
+#     print('新表创建成功')
+# except Exception as error:
+#     print(error)
+#     print('新表创建失败')
+
+# """清空表"""
+# try:
+#     sql = "DELETE FROM newYear"
+#     cursor.execute(sql)
+#     conn.commit()
+#     print("表清除成功")
+# except Exception as error:
+#     print(error)
+#     print("表清除失败")
+
+# """删除表"""
+# try:
+#     sql = "DROP TABLE newfile"
+#     cursor.execute(sql)
+#     conn.commit()
+#     print("表删除成功")
+# except Exception as error:
+#     print(error)
+#     print("表删除失败")
+
+conn.close()
+print('服务器关闭成功')
+print('=============================')
